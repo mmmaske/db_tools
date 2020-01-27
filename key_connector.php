@@ -11,9 +11,76 @@ if (mysqli_connect_errno()) {
 
 $limit = 10;
 $foreign = array(
-	'sms_transactiontype' => array(
-		'from_column' => 'id',
-		'to_column' => 'type_id',
+
+);
+
+$primary = array(
+	'event_contacts' => array(
+		'conditions' => array(
+			'deleted' => array(
+				'matching'=>'',
+				'value'=>0,
+			),
+		),
+		'keys' => array(
+			'contacts' => array(
+				'from_column' => 'id', // primary key in foreign table
+				'to_column' => 'contact_id', // foreign key in primary table
+				'conditions' => array(
+					'deleted' => array(
+						'matching'=>'',
+						'value'=>0,
+					),
+				),
+			),
+			'smsevent' => array(
+				'from_column' => 'id', // primary key in foreign table
+				'to_column' => 'event_id', // foreign key in primary table
+				'conditions' => array(
+					'deleted' => array(
+						'matching'=>'',
+						'value'=>0,
+					),
+				),
+			),
+		),
+	),
+);
+
+
+/**
+ * Key Collection
+ *
+ * Takes the value of from_column and updates primary table's to_column
+ */
+foreach($primary as $to=>$params) {
+	debug($params);
+	$mastercondition		=	"";
+	if(!empty($params['conditions'])) {
+		$mastercondition			=	create_sql_condition($to, $params['conditions']);
+		$mastercondition	=	"WHERE ".implode(", ",$mastercondition);
+	}
+	if(!empty($params['keys'])) {
+		foreach($params['keys'] as $from=>$fromparams) {
+			$subcondition			=	create_sql_condition($from, $fromparams['conditions']);
+			$subcondition			=	"WHERE ".implode(", ",$subcondition);
+			$mastergetter			=	"SELECT ".$from.".".$fromparams['from_column']." FROM ".$from." ".$subcondition." ORDER BY RAND() LIMIT 1";
+			$queries[$from]		=	"UPDATE ".$to." SET ".$fromparams['to_column']."=(".$mastergetter.") ".$mastercondition."; ";
+		}
+	}
+}
+debug($queries);
+
+/**
+ * Key Distribution
+ *
+ * Takes the value of primary table's to_column and updates from.from_column
+ */
+
+$foreign = array(
+	'contacts' => array(
+		'from_column' => 'id', // primary key in foreign table
+		'to_column' => 'contact_id', // foreign key in primary table
 		'conditions' => array(
 			'deleted' => array(
 				'matching'=>'',
@@ -21,9 +88,9 @@ $foreign = array(
 			),
 		),
 	),
-	'contacts' => array(
-		'from_column' => 'id',
-		'to_column' => 'contact_id',
+	'smsevent' => array(
+		'from_column' => 'id', // primary key in foreign table
+		'to_column' => 'event_id', // foreign key in primary table
 		'conditions' => array(
 			'deleted' => array(
 				'matching'=>'',
@@ -34,40 +101,28 @@ $foreign = array(
 );
 
 $primary = array(
-	'sms_fee' => array(
+	'event_contacts' => array(
 		'conditions' => array(
 			'deleted' => array(
 				'matching'=>'',
 				'value'=>0,
 			),
 		),
+		'keys' => $foreign,
 	),
 );
 
-
-
-foreach($primary as $to=>$params) {
+foreach($foreign as $from=>$fromparams) {
 	$mastercondition		=	"";
 	if(!empty($params['conditions'])) {
-		$mastercondition			=	create_sql_condition($params['conditions']);
+		$mastercondition			=	create_sql_condition($from, $fromparams['conditions']);
 		$mastercondition	=	"WHERE ".implode(", ",$mastercondition);
 	}
-	foreach($foreign as $from=>$fromparams) {
-		$subcondition			=	create_sql_condition($fromparams['conditions']);
+	foreach($primary as $to=>$params) {
+		$subcondition			=	create_sql_condition($to, $params['conditions']);
 		$subcondition			=	"WHERE ".implode(", ",$subcondition);
-		$mastergetter			=	"SELECT ".$fromparams['from_column']." FROM ".$from." ".$subcondition." ORDER BY RAND() LIMIT 1";
-		$queries[$from]		=	"UPDATE ".$to." SET ".$fromparams['to_column']."=(".$mastergetter.") ".$mastercondition."; ";
+		$mastergetter			=	"SELECT ".$to.".".$fromparams['to_column']." FROM ".$to." ".$subcondition." ORDER BY RAND() LIMIT 1";
+		$queries[$from]		=	"UPDATE ".$from." SET ".$fromparams['from_column']."=(".$mastergetter.") ".$mastercondition."; ";
 	}
 }
-
-
-//foreach($from as $subtable=>$subparams) {
-//	$mastergetter			=	"SELECT ".$from['column']." FROM ".$from['table']." ".$mastercondition." ORDER BY RAND() LIMIT 1";
-//	$subcondition		=	"";
-//	if(!empty($subparams['conditions'])) {
-//		$subconditions	=	create_sql_condition($subparams['conditions']);
-//		$subcondition	=	"WHERE ".implode(", ",$subconditions);
-//	}
-//	$queries[$subtable]		=	"UPDATE ".$subtable." SET ".$subparams['column']."=(".$mastergetter.") ".$subcondition."; ";
-//}
 debug($queries);

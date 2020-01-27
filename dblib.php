@@ -70,11 +70,13 @@ function generate_faker_by_column($col) {
 	}
 	debug("if you see this then i fucced up AYYY LMAO");
 }
-function create_sql_condition($master_conditions) {
+function create_sql_condition($table, $master_conditions) {
 	foreach($master_conditions as $condition=>$params) {
-		if($params['matching']=='') $conditions[]	=	$condition." = '".$params['value']."'";
-		elseif($params['matching']=='%') $conditions[]	=	$condition." LIKE '%".$params['value']."'";
-		else $conditions[]	=	$condition." LIKE '%".$params['value']."%'";
+		if($params['matching']=='') $conditions[]	=	$table.".".$condition." = '".$params['value']."'";
+		elseif($params['matching']=='%') $conditions[]	=	$table.".".$condition." LIKE '%".$params['value']."'";
+		elseif($params['matching']=='>') $conditions[]	=	$table.".".$condition." > ".$params['value'];
+		elseif($params['matching']=='<') $conditions[]	=	$table.".".$condition." < ".$params['value'];
+		else $conditions[]	=	$table.".".$condition." LIKE '%".$params['value']."%'";
 	}
 	return $conditions;
 }

@@ -10,5 +10,5 @@ $connect_params	=	array(
 	'dbhost'	=>	'localhost',
 	'dbuser'	=>	'root',
 	'dbpass'	=>	'',
-	'dbname'	=>	'my_database',
+	'dbname'	=>	'zaidan_test',
 );
