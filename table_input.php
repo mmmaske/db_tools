@@ -1,7 +1,8 @@
 <form action="table_populator.php" method="GET">
+	<input type="hidden" name="dbname" value="<?php echo $_GET['dbname']; ?>" />
     <table style="margin:auto" cellpadding="1">
         </tr>
-            <th style="text-align:center;" colspan="2">Row Generator</th>
+            <th style="text-align:center;" colspan="2"><h2>Row Generator</h3></th>
         </tr>
         <tr>
             <th><label for="quantity">Row count</label></th>

@@ -31,6 +31,8 @@ function quickquery($sql) {
 function generate_faker_by_column($col) {
 //	$faker = Faker\Factory::create();
 	$faker = Faker\Factory::create('ja_JP');
+	if($col['Field']=='school_id') return "'sssssss-1111'";
+	if($col['Field']=='deleted') return "0";
 	preg_match('/(?<=\()(.+)(?=\))/is', $col['Type'], $length);
 	if($col['Null']=='YES' && rand(0,10)==1) { // generate null
 		return 'NULL';
@@ -79,4 +81,19 @@ function create_sql_condition($table, $master_conditions) {
 		else $conditions[]	=	$table.".".$condition." LIKE '%".$params['value']."%'";
 	}
 	return $conditions;
+}
+function get_string_between($string, $start, $end){
+	$string = ' ' . $string;
+	$ini = strpos($string, $start);
+	if ($ini == 0) return '';
+	$ini += strlen($start);
+	$len = strpos($string, $end, $ini) - $ini;
+	return substr($string, $ini, $len);
+}
+function optionify($array) {
+	$return = '';
+	foreach($array as $i=>$v) {
+		$return .= '<option value="'.$i.'">'.$v.'</option>';
+	}
+	return $return;
 }

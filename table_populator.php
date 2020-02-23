@@ -1,45 +1,18 @@
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<style>
-		body {
-			color: #FFF;
-			background-color: #000;
-		}
-		h1, h2, h3, h4, h5 {
-			color: #666;
-		}
-		input {
-			margin:5px;
-		}
-		*.unselectable {
-			-moz-user-select: -moz-none;
-			-khtml-user-select: none;
-			-webkit-user-select: none;
-			-ms-user-select: none;
-			user-select: none;
-		}
-	</style>
-</head>
+
 <?php
 require_once('faker/autoload.php');
 require_once('dblib.php');
 require_once('config.php');
 
-$db		=	new mysqli($connect_params['dbhost'],$connect_params['dbuser'],$connect_params['dbpass'],$connect_params['dbname']);
-if (mysqli_connect_errno()) {
-	printf("Connect failed: %s\n", mysqli_connect_error());
-	exit();
-}
-
 $tables	=	array();
 	if(empty($_GET)) {
 		unset($connect_params['dbuser']);
 		unset($connect_params['dbpass']);
-		echo "<pre class='unselectable'>";print_r($connect_params);echo "</pre>";
+		echo "<pre>";print_r($connect_params);echo "</pre>";
 		include("table_input.html");
 	}
 	else {
-		echo "<pre class='unselectable'>";print_r($_GET);echo "</pre>";
+		echo "<pre>";print_r($_GET);echo "</pre>";
 		
 		// refactor this shit
 		$encoded_tables = explode(",", $_GET['csv_tables']);
@@ -88,20 +61,20 @@ if(!empty($sqltables)) {
 		$sql = "INSERT INTO ".$table_name." <br/>(".$tables[$table_name]['columns'].") <br/>VALUES <br/>".implode(",<br/>", $tables[$table_name]['values'])."; ";
 		$clean_sql = "INSERT INTO ".$table_name." (".$tables[$table_name]['columns'].") VALUES ".implode(",", $tables[$table_name]['values'])."; ";
 
-		echo "<h1 class='unselectable'>Generating query for ".$table_name."</h1>";
+		echo "<h1>Generating query for ".$table_name."</h1>";
 		if($output['debug']) {
-			echo "<h3 class='unselectable'>Debug variable</h3>";
+			echo "<h3>Debug variable</h3>";
 			debug($debug);
-			echo "<h3 class='unselectable'>Table variable</h3>";
+			echo "<h3>Table variable</h3>";
 			debug($tables);
 		}
 		if($output['echo']) {
-			echo "<pre>".$sql."</pre>";
+			echo "<pre class='selectable'>".$sql."</pre>";
 		}
 		if($output['autoquery']) {
 			$db->query($clean_sql);
 			if($db->error != "") debug($db->error);
-			else echo "<p class='unselectable'>".$populate['count']." rows inserted to ".$table_name."</p>";
+			else echo "<p>".$populate['count']." rows inserted to ".$table_name."</p>";
 		}
 		echo "<br/><hr/><br/>";
 	}
