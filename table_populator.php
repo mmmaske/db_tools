@@ -9,7 +9,7 @@ $tables	=	array();
 		unset($connect_params['dbuser']);
 		unset($connect_params['dbpass']);
 		echo "<pre>";print_r($connect_params);echo "</pre>";
-		include("table_input.html");
+		include("table_input.php");
 	}
 	else {
 		echo "<pre>";print_r($_GET);echo "</pre>";

@@ -18,14 +18,18 @@
 			-ms-user-select: none;
 			user-select: none;
 		}
+		a {
+			color:#FF4444;
+		}
 		.selectable {
-			-moz-user-select: -moz-all;
-			-khtml-user-select: all;
-			-webkit-user-select: all;
-			-ms-user-select: all;
-			user-select: all;
+			-moz-user-select: -moz-initial;
+			-khtml-user-select: initial;
+			-webkit-user-select: initial;
+			-ms-user-select: initial;
+			user-select: initial;
 		}
 	</style>
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
 </head>
 <?php
 $populate['tables']		=	array();
