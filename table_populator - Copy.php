@@ -3,7 +3,7 @@
 require_once('faker/autoload.php');
 require_once('dblib.php');
 require_once('config.php');
-$faker = Faker\Factory::create('ja_JP');
+
 $tables	=	array();
 	if(empty($_GET)) {
 		unset($connect_params['dbuser']);
@@ -35,8 +35,8 @@ if(!empty($sqltables)) {
 	foreach($sqltables as $table) {
 		$valuestring	=	'';
 		$ctr	=	$populate['count'];
-		if(isset($table['Tables_in_'.$connect_params['dbname']])) { $table_name	=	trim($table['Tables_in_'.$connect_params['dbname']]); }
-		else { $table_name	=	trim($table); }
+		if(isset($table['Tables_in_'.$connect_params['dbname']])) { $table_name	=	$table['Tables_in_'.$connect_params['dbname']]; }
+		else { $table_name	=	$table; }
 		$columns=$values				=	array();
 		$tables[$table_name]			=	array();
 		$tables[$table_name]['columns']	=	quickquery("DESC ".$table_name);
@@ -49,11 +49,6 @@ if(!empty($sqltables)) {
 		while($ctr>0) {
 			foreach($tables[$table_name]['columns'] as $dbcolumn) {
 				$fakedvalue	=	generate_faker_by_column($dbcolumn);
-				
-				// if($table_name=="practice_exam_category" && $dbcolumn['Field']=="id") { // special case
-					// $fakedvalue = $faker->unique(true)->numberBetween(1,$ctr+1);
-				// }
-				
 				$values[$ctr][]	=	$fakedvalue;
 				$debug[$table_name][$ctr][$dbcolumn['Field']]			=	$dbcolumn;
 				$debug[$table_name][$ctr][$dbcolumn['Field']]['value']	=	$fakedvalue;

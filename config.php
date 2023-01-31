@@ -26,7 +26,7 @@
 			-khtml-user-select: initial;
 			-webkit-user-select: initial;
 			-ms-user-select: initial;
-			user-select: initial;
+			user-select: text;
 		}
 	</style>
 	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>

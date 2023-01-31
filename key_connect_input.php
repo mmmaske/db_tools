@@ -8,32 +8,37 @@ foreach($tables as $table) {
 ?>
 <form action="key_connector.php" method="GET">
 	<input type="hidden" name="dbname" value="<?php echo $_GET['dbname']; ?>" />
-    <table style="margin:auto" cellpadding="1" id="key_connector_table" border="1">
-        </tr>
-            <th style="text-align:center;" colspan="3"><h2>Key Connector</h2></th>
-        </tr>
-        <tr>
-            <th><label for="primary_table" alt="Paghuhugutan ng data">Primary Table</label></th>
-            <td><select name="primary_table" id="primary_table"><?php echo optionify($table_names); ?></select></td>
-        </tr>
+	<table style="margin:auto" cellpadding="1" id="key_connector_table" border="1">
+		<tr>
+			<th style="text-align:center;" colspan="3"><h2>Key Connector</h2></th>
+		</tr>
 		<tr>
 			<td style="text-align:center;" colspan="3"><input type="submit" value="Generate Queries"></td>
 		</tr>
+		<tr>
+			<th><label for="primary_table" alt="Paghuhugutan ng data">Primary Table</label></th>
+			<td><select name="primary_table" id="primary_table"><?php echo optionify($table_names); ?></select></td>
+		</tr>
+		<tr>
+			<td colspan="3">
+				<table style="margin:auto" cellpadding="1" id="conditions_table">
+					<tr>
+						<th colspan="4"><h3>Primary Table Conditions</h3></th>
+					</tr>
+					<tr>
+						<th colspan="4"><a id="connector_new_condition">Add new condition (+)</a></th>
+					</tr>
+					<tr class="condition_header">
+						<th>Column Name</th>
+						<th>Condition Operand</th>
+						<th>Required Value</th>
+						<th></th>
+					</tr>
+				</table>
+			</td>
+		</tr>
 	</table>
-	<table style="margin:auto" cellpadding="1" id="conditions_table" border="1">
-		<tr>
-			<th colspan="4"><h3>Primary Table Conditions</h3></th>
-		</tr>
-		<tr>
-			<th colspan="4"><a id="connector_new_condition">Add new condition (+)</a></th>
-		</tr>
-		<tr class="condition_header">
-			<th>Column Name</th>
-			<th>Condition Operand</th>
-			<th>Required Value</th>
-			<th></th>
-		</tr>
-    </table>
+
 	<table style="margin:auto" cellpadding="1" id="foreign_table" border="1">
 		<tr>
 			<th colspan="3"><h3>Foreign Table</h3></th>

@@ -55,6 +55,9 @@ function generate_faker_by_column($col) {
 	if(strpos($col['Type'], 'double')!== false) {
 		return number_format($faker->randomFloat,2,'.','');
 	}
+	if(strpos($col['Type'], 'decimal')!== false) {
+		return number_format($faker->randomFloat,2,'.','');
+	}
 	if(strpos($col['Type'], 'tinyint')!== false) {
 		return $faker->numberBetween(0,9);
 	}
